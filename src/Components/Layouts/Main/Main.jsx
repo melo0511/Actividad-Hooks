@@ -10,29 +10,54 @@ export const Main = () => {
                 <p>Publica tu tweet</p>
             </div>
 
-            <textarea name="" id="textArea" cols="30" rows="10">
+            <div id='containerText'>
 
-            </textarea>
+                <textarea name="" id="textArea" placeholder="limite de caracteres '225'">
+
+                </textarea>
+
+            </div>
 
             <div id="foot">
 
-                <Buttons 
-                    click = ''
-                    identifier = 'Button'
-                    textButton = 'Publicar'
-                />
+                <div id='containerButtons'>
 
-                <Buttons 
-                    click = ''
-                    identifier = 'Button'
-                    textButton = 'Archivar'
-                />
+                    <Buttons 
+                        click = ''
+                        identifier = 'Button'
+                        textButton = 'Publicar'
+                    />
 
-                <Buttons 
-                    click = ''
-                    identifier = 'Button'
-                    textButton = 'Mostrar Archivados'
-                />
+                    <Buttons 
+                        click = ''
+                        identifier = 'Button'
+                        textButton = 'Archivar'
+                    />
+
+                    <Buttons 
+                        click = ''
+                        identifier = 'Button'
+                        textButton = 'Mostrar Archivados'
+                    />
+
+                </div>
+
+                
+                <div id='containerFootText'>
+
+                    <div id='space'>
+
+                    </div>
+
+                    <div id='text'>
+                        <p>Aqui se verá tu tweet</p>
+                    </div>
+
+                    <div id='containerCount'>
+                        <p>255</p>
+                    </div>
+
+                </div>
 
             </div>
 
