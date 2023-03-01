@@ -2,10 +2,23 @@ import React from 'react'
 import { useState } from 'react'
 import { Buttons } from '../../UI/Buttons/Buttons'
 
-export const Tweets = []
+
+const Tweets = []
+let id = 0
+let getLocal
+
+// variables de animacion
 let Animation = false
 let cronometerStop
 let press
+
+//Coversion del arreglo Tweets
+let convertString
+let convertArray
+
+let saveKey
+let getKey
+
 
 export const Main = () => {
 
@@ -30,6 +43,9 @@ export const Main = () => {
 
     const btnAdd = ()=>{
 
+        clearInterval(press)
+        clearTimeout(cronometerStop)
+
         if(cap===""){
             setAdd("No puedes publicar Tweets vacios!")
         }else{
@@ -42,6 +58,11 @@ export const Main = () => {
     //Archivar
 
     const btnArchive = ()=>{
+
+        clearInterval(press)
+        clearTimeout(cronometerStop)
+        Animation=false
+
         let success
         clearTimeout(success)
 
@@ -52,19 +73,36 @@ export const Main = () => {
         success= setTimeout(()=>{
             setAdd(saveTweet)
         },1500)
+
+        convertString = JSON.stringify(Tweets)
+
+        id++
+        saveKey = localStorage.setItem("key",id)
+        localStorage.setItem(id,convertString)
+        console.log(id);
     }
 
     //Mostrar archivados
 
-    const [tweet,setTweet] = useState("No hay nada por aquí :)")
+    const [tweet,setTweet] = useState()
 
     const btnShowArchive = ()=>{
 
-        if(Tweets.length===0){
+        clearInterval(press)
+        clearTimeout(cronometerStop)
+        Animation=false
+
+        getKey =localStorage.getItem("key")
+        getLocal = localStorage.getItem(getKey)
+        convertArray = JSON.parse(getLocal)
+        
+        console.log(convertArray);
+
+        if(convertArray===null){
             setAdd("No has 'archivado' ningun tweet")
         }else{
             
-            Tweets.forEach((element,i) => {      
+            convertArray.forEach((element,i) => {      
                 i++
                 setTweet(prevState => [prevState,<p key={i}>{i+". "+element}</p>])
             });
