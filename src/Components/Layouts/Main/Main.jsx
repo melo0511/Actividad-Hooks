@@ -2,9 +2,12 @@ import React from 'react'
 import { useState } from 'react'
 import { Buttons } from '../../UI/Buttons/Buttons'
 
-const Tweets = []
+export const Tweets = []
+let Animation = false
+let cronometerStop
+let press
 
-export const Main = (prop) => {
+export const Main = () => {
 
     const [cap,capText] = useState("")
 
@@ -14,33 +17,46 @@ export const Main = (prop) => {
 
         if(value.length <= 255){
             capText(value)
-            setCount(value.length)
+            setCount(255-value.length)
         }
         
     }
 
     //Contador
-    const [count,setCount] = useState(0)
+    const [count,setCount] = useState(255)
 
     // Publicar
     const [Add,setAdd] = useState('Aqui verás tu tweet actual')
 
     const btnAdd = ()=>{
-        setAdd(cap)
-        capText("")
+
+        if(cap===""){
+            setAdd("No puedes publicar Tweets vacios!")
+        }else{
+            setAdd(cap)
+            capText("")
+        }
+        
     }
 
     //Archivar
 
     const btnArchive = ()=>{
+        let success
+        clearTimeout(success)
+
         let saveTweet = Add
         Tweets.push(saveTweet)
-        console.log(Tweets);
+
+        setAdd("Tweet Archivado!")
+        success= setTimeout(()=>{
+            setAdd(saveTweet)
+        },1500)
     }
 
     //Mostrar archivados
 
-    const [archive,setArchive] = useState()
+    const [tweet,setTweet] = useState("No hay nada por aquí :)")
 
     const btnShowArchive = ()=>{
 
@@ -48,17 +64,49 @@ export const Main = (prop) => {
             setAdd("No has 'archivado' ningun tweet")
         }else{
             
-            let i= 0
-
-            Tweets.forEach(element => {
-
-                <p>{i+". "+element}</p>
+            Tweets.forEach((element,i) => {      
                 i++
-                console.log(i+"."+element);
-
+                setTweet(prevState => [prevState,<p key={i}>{i+". "+element}</p>])
             });
 
         }
+
+    }
+
+    // Animacion Escritura
+
+    const keyAnimation = ()=>{
+
+        // Cuando escuche el evento keyUp inicia la animacion y luego de 10s la desactiva para que no entre al setInterval con cada keyUp
+        let saveText = cap
+        let point = "Escribiendo Tweet"
+
+        clearTimeout(cronometerStop)
+
+        if(Animation === false){
+            Animation = true
+
+            press = setInterval(()=>{
+
+                if(point==="Escribiendo Tweet..."){
+                    point="Escribiendo Tweet"
+                }else{
+                    setAdd(point+=".")
+                }
+    
+            },600)
+        }
+
+        // Compara el texto escrito hace 10 segundos(saveText) con el tweet actual(cap) 
+        cronometerStop = setTimeout(()=>{
+            if(cap===saveText){
+
+                clearInterval(press)
+                setAdd("Termina tu tweet!")
+                Animation = false
+
+            }   
+        },10000)
 
     }
 
@@ -74,7 +122,7 @@ export const Main = (prop) => {
 
             <div id='containerText'>
 
-                <textarea value={cap} onChange={captureText}  id="textArea" placeholder="limite de caracteres '225'">
+                <textarea value={cap} onChange={captureText}  onKeyUp={keyAnimation} id="textArea" placeholder="limite de caracteres '225'">
                     
                 </textarea>
 
@@ -125,6 +173,21 @@ export const Main = (prop) => {
 
         </section>
 
+        {/* footer */}
+
+        <footer id='footer'>
+
+        <div id='FooterTitle'>
+          <h3>Aqui se veran sus tweets archivados</h3>
+        </div>
+        
+        <div id='containerTweets'>
+            {tweet}
+        </div>
+
+        </footer>
+
     </main>
+    
   )
 }
